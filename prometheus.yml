@@ -1,0 +1,42 @@
+# Global configuration
+# We can override most of its property for specific job
+# Using the same property
+
+global:
+
+  # How frequently to scrape targets by default
+  scrape_interval: 15s
+
+  # How long until a scrape request times out
+  scrape_timeout: 10s
+
+# A list of scrape configurations
+#
+# The job name assigned to scraped metrics by default
+# Must be unique
+# job_name: <job_name>
+# 
+# The HTTP resource path on which to fetch metrics from targets
+# [ metrics_path: <path> | default = /metrics ]
+# 
+# List of labeled statically configured targets for this job.
+# static_configs:
+# 
+#   # The targets specified by the static config.
+#   targets:
+#     [ - '<host>' ]
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: [ '127.0.0.1:9090' ]
+
+  - job_name: 'beautiful-service'
+    metrics_path: ''
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'python:8000' ]
+
+
+# Official Documentation:
+# https://prometheus.io/docs/prometheus/latest/configuration/configuration/
