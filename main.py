@@ -1,19 +1,32 @@
-from prometheus_client import start_http_server, Summary, Counter
 import random
 import time
 
+from prometheus_client import start_http_server, Summary, Counter
+
 # Create a metric to track time spent and requests made.
-REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
-SUCCESS_COUNTER = Counter('request_success_request', 'Success request')
+REQUEST_TIME = Summary('request_processing', 'Time spent processing request')
+SUCCESS_COUNTER = Counter('request_success', 'Success request')
+EXCEPTION_COUNTER = Counter('request_exception', 'Exceptions', ["name"])
 
 
 # Decorate function with metric.
 @REQUEST_TIME.time()
 def process_request(t):
-    """A dummy function that takes some time."""
+    # Summarize time
     time.sleep(t)
-    if random.random() > 0.5:
-        SUCCESS_COUNTER.inc(1)
+
+    # Increase counter
+    if random.random() < 0.5:
+        SUCCESS_COUNTER.inc()
+
+    # Increase exception
+    if random.random() < 0.4:
+        try:
+            exception = random.choice([KeyError, KeyboardInterrupt, InterruptedError])
+            with EXCEPTION_COUNTER.labels(name=repr(exception)).count_exceptions(exception):
+                raise exception
+        except:
+            pass
 
 
 if __name__ == '__main__':
