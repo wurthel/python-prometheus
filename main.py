@@ -1,13 +1,16 @@
 import random
 import time
-from aioprometheus import Counter, Service
 
-from prometheus_client import start_http_server, Summary, Counter
+from prometheus_client import start_http_server, Summary, Counter, Histogram
 
 # Create a metric to track time spent and requests made.
 REQUEST_TIME = Summary('request_processing', 'Time spent processing request')
 SUCCESS_COUNTER = Counter('request_success', 'Success request')
 EXCEPTION_COUNTER = Counter('request_exception', 'Exceptions', ["name"])
+LATENCY_METRICS = Counter(
+    "request_latency_seconds",
+    "Request latency in seconds",
+)
 
 
 # Decorate function with metric.
@@ -28,6 +31,9 @@ def process_request(t):
                 raise exception
         except:
             pass
+
+    # Histogram metric
+    LATENCY_METRICS.observe(t * 10)
 
 
 if __name__ == '__main__':

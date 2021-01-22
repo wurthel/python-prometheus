@@ -5,8 +5,8 @@ and exposed via a HTTP endpoint.
 """
 import asyncio
 import socket
-from aioprometheus import Counter, Service
 
+from aioprometheus import Counter, Service
 
 if __name__ == "__main__":
 
@@ -27,6 +27,7 @@ if __name__ == "__main__":
                 await asyncio.sleep(1.0)
 
         await updater(events_counter)
+
 
     loop = asyncio.get_event_loop()
     svr = Service()
