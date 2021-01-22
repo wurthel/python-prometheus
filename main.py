@@ -1,5 +1,6 @@
 import random
 import time
+from aioprometheus import Counter, Service
 
 from prometheus_client import start_http_server, Summary, Counter
 
